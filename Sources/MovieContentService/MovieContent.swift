@@ -21,8 +21,8 @@ public actor MovieContent {
     
     private func getMovie(id: Int) async throws -> Movie? {
         let response: Db2Handler.QueryResponse<Movie> = try await db2Handler.runSyncJob(service: "GetMovieByID",
-                                                                                           version: "1.0",
-                                                                                           parameters: ["movieId": id])
+                                                                                        version: "1.0",
+                                                                                        parameters: ["movieId": id])
         guard response.rowCount == 1 else {
             return nil
         }
@@ -31,8 +31,8 @@ public actor MovieContent {
     
     private func getMovie(name: String, limit: Int) async throws -> Db2Handler.Job<Movie> {
         let response: Db2Handler.Job<Movie> = try await db2Handler.runAsyncJob(service: "GetMovieByName", version: "1.0",
-                                                                                  parameters: ["title": name.lowercased()],
-                                                                                  limit: limit)
+                                                                               parameters: ["title": name.lowercased()],
+                                                                               limit: limit)
         return response
     }
     
