@@ -54,7 +54,7 @@ public actor MovieContent {
         return result
     }
 
-    func movie(by id: Int) async throws -> Movie {
+    public func movie(by id: Int) async throws -> Movie {
         if let movie = movies[id] {
             return movie
         }
@@ -66,11 +66,11 @@ public actor MovieContent {
         return movie
     }
     
-    func movies(by name: String) async throws -> Db2Handler.Job<Movie> {
+    public func movies(by name: String) async throws -> Db2Handler.Job<Movie> {
         try await getMovie(name: name, limit: 10)
     }
     
-    func movies(from job: Db2Handler.Job<Movie>) async throws -> [Movie]? {
+    public func movies(from job: Db2Handler.Job<Movie>) async throws -> [Movie]? {
         guard let movies = try await job.nextPage()?.resultSet else {
             return nil
         }
@@ -81,7 +81,7 @@ public actor MovieContent {
         return movies
     }
     
-    func genres(for movie: Movie) async throws -> [String] {
+    public func genres(for movie: Movie) async throws -> [String] {
         if let genres = self.genres[movie] {
             return genres
         }
@@ -91,7 +91,7 @@ public actor MovieContent {
         return genres
     }
     
-    func productionCompanies(for movie: Movie) async throws -> [String] {
+    public func productionCompanies(for movie: Movie) async throws -> [String] {
         if let productionCompanies = self.productionCompanies[movie] {
             return productionCompanies
         }
