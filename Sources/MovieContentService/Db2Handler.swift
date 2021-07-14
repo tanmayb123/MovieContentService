@@ -134,6 +134,10 @@ public class Db2Handler {
             return nil
         }
     }
+
+    enum AuthenticationError: Error {
+        case noAuthToken
+    }
     
     enum RequestError: Error {
         case invalidURL
@@ -142,19 +146,26 @@ public class Db2Handler {
                                                                                                                                                                                                                                                    
     let authSettings: AuthSettings
     public private(set) var authToken: String!
+    private var authTokenError: Error!
     
-    public init(authSettings: AuthSettings) {
+    public init(authSettings: AuthSettings) throws {
         self.authSettings = authSettings
         let tokenSemaphore = DispatchSemaphore(value: 0)
         async {
             do {
                 self.authToken = try await getDb2AuthToken()
             } catch let error {
-                fatalError("Can't connect to Db2: \(error)")
+                self.authTokenError = error
             }
             tokenSemaphore.signal()
         }
         tokenSemaphore.wait()
+        if let authTokenError = authTokenError {
+            throw authTokenError
+        }
+        if authToken == nil {
+            throw AuthenticationError.noAuthToken
+        }
     }
     
     private func getDb2AuthToken() async throws -> String {
