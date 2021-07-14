@@ -1,7 +1,7 @@
 import Foundation
 
 public class Db2Handler {
-    public struct AuthSettings {
+    public struct AuthSettings: Codable {
         var hostname: String
         var database: String
         var dbPort: Int
